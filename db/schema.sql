@@ -3,7 +3,7 @@ DROP DATABASE IF EXISTS employees_db;
 
 CREATE DATABASE employees_db;
 
---Use database
+-- Use database
 USE employees_db;
 
 -- Create table departments
@@ -35,4 +35,3 @@ CREATE TABLE employee (
     REFERENCES employee(id)
     ON DELETE SET NULL
 );
-
