@@ -161,3 +161,19 @@ function allRoles() {
             runChoices();
         });
 };
+
+
+// Function view all employees
+function allEmployees() {
+    db.query("SELECT employee.id AS ID, employee.first_name AS First_Name, employee.last_name AS Last_Name, role.title AS Title, departments.name AS Department, role.salary AS Salary, CONCAT(a.first_name, ' ', a.last_name) AS Manager FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN departments on  role.department_id = departments.id  LEFT JOIN employee a on employee.manager_id = a.id",
+
+        function (err, res) {
+            if (err) throw err;
+            // Display json data in a table
+            console.table(res);
+            // Run the choices 
+            runChoices();
+        });
+};
+
+
