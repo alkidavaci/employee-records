@@ -207,3 +207,77 @@ function addDepartment() {
     })
 };
 
+
+// Function add department
+function addRole() {
+    inquirer.prompt([
+        {
+            name: "roleName",
+            type: "input",
+            message: "Role you want to add: ",
+            validate: (input) => {
+                if (input) {
+                    return true;
+                } else {
+                    console.log(' Please enter new role!');
+                    return false;
+                }
+            }
+        },
+        {
+            name: "salary",
+            type: "input",
+            message: "Salary for new role: ",
+            validate: (input) => {
+                if (!isNaN(input)) {
+                    return true;
+                } else {
+                    console.log(' Please enter new role salary!');
+                    return false;
+                }
+            }
+        },
+        {
+            type: "list",
+            name: "choice",
+            message: "Department for new role: ",
+            choices: getDepartments()
+
+        }
+    ]).then((answer) => {
+        // Get department id
+        const depID = getDepartments().indexOf(answer.choice) + 1;
+        // Object with input title, salary and id
+        const newRole = {
+            title: answer.roleName,
+            salary: answer.salary,
+            department_id: depID,
+        }
+
+        db.query("INSERT INTO role SET ?", newRole,
+
+            function (err, res) {
+                if (err) throw err;
+                // Display role name is added                
+                console.log('\n"', answer.roleName, '" role is added.\n');
+                // Run the choices 
+                runChoices();
+            });
+    });
+};
+
+
+
+// Declare an array that will contain departments
+var arrayDep = [];
+// Function return the array of departments
+function getDepartments() {
+    db.query("SELECT * FROM departments",
+        function (err, res) {
+            if (err) throw err;
+            for (let i = 0; i < res.length; i++) {
+                arrayDep.push(res[i].name);
+            }
+        });
+    return arrayDep;
+};
