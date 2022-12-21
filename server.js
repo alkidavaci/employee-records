@@ -399,6 +399,40 @@ function deleteRole() {
 }
 
 
+// Function to delete employee
+function deleteEmployee() {
+    inquirer.prompt([
+        {
+            name: "add",
+            type: "input",
+            message: "Delete employee.(Press ENTER to continue) ", //Inquirer 8.2.4 doesn't allow a list type to be first prompt
+        },
+        {
+            type: "list",
+            name: "employee",
+            message: "Choose employee: ",
+            choices: getEmployeeName()
+
+        }
+    ]).then((answer) => {
+        // Get role id
+        const employeeID = getEmployeeName().indexOf(answer.employee) + 1;
+
+        db.query(`DELETE from employee WHERE id = ${employeeID}`,
+
+            function (err, res) {
+                if (err) throw err;
+                // Display employee deleted                
+                console.log('\n"', answer.employee, '" has been deleted', '.\n');
+                // Run the choices 
+                runChoices();
+            });
+    });
+}
+
+
+
+
 
 // Declare an array that will contain departments
 var arrayDep = [];
