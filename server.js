@@ -501,6 +501,36 @@ function viewEmployeeByRole() {
 };
 
 
+// View All Employees by Department
+function viewEmployeeByDepartment() {
+    inquirer.prompt([
+        {
+            name: "add",
+            type: "input",
+            message: "View employee by departments:(Press ENTER to continue) ", //Inquirer 8.2.4 doesn't allow a list type to be first prompt
+        },
+        {
+            type: "list",
+            name: "department",
+            message: "Choose a department: ",
+            choices: getDepartments()
+        }
+    ]).then((answer) => {
+        // Get department id
+        const depID = getDepartments().indexOf(answer.department) + 1;
+
+        db.query(`SELECT employee.id AS ID, employee.first_name AS First_Name, employee.last_name AS Last_Name, role.title AS Title, role.salary AS Salary, CONCAT(a.first_name, ' ', a.last_name) AS Manager FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN departments on  role.department_id = departments.id  LEFT JOIN employee a on employee.manager_id = a.id WHERE departments.id = ${depID} `,
+            function (err, res) {
+                if (err) throw err;
+                // Display employee id first and last name that have selected role
+                console.table(`\n${answer.department}`, res);
+                // Run the choices 
+                runChoices();
+            });
+    });
+}
+
+
 
 // Declare an array that will contain departments
 var arrayDep = [];
