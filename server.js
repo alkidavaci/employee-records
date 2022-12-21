@@ -15,42 +15,41 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//! THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
-//! THEN I am presented with a formatted table showing department names and department ids
-// THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
-// THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
-// THEN I am prompted to enter the name of the department and that department is added to the database
-// THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
-// THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 
-db.connect(function(err) {
+db.connect(function (err) {
     if (err) throw err;
-   
+
     console.log("\n============>  WELCOME TO THE EMPLOYEE DATABASE  <============\n");
-    
+
     // Call function to run the choices
     runChoices();
-  });
+});
 
 function runChoices() {
     inquirer.prompt([
         {
-        type: "list",
-        message: "What would you like to do?",
-        name: "choice",
-        choices: [
+            type: "list",
+            message: "What would you like to do?",
+            name: "choice",
+            choices: [
                 "View All Departments",
                 "View All Roles",
-                "View All Employees", 
+                "View All Employees",
                 "View All Employees by Department",
                 "View All Employees by Role",
+                "View All employees by manager",
                 "Add Department",
                 "Add Role",
                 "Add Employee",
+                "Delete Department",
+                "Delete Role",
+                "Delete Employee",
                 "Update Employee Role",
+                "Update Employee Manager",
+                "View total budget of departments",
                 "Exit"
-                ]
+            ]
         }])
         .then((answer) => {
             switch (answer.choice) {
@@ -58,56 +57,107 @@ function runChoices() {
                 case "View All Departments":
                     console.log("\n", answer.choice, "\n");
                     allDepartments();
-                break;
-                
-                case  "View All Roles":
-                    console.log(answer.choice);
-                break;
+                    break;
+
+                case "View All Roles":
+                    console.log("\n", answer.choice, "\n");
+                    allRoles();
+                    break;
 
                 case "View All Employees":
-                    console.log(answer.choice);                    
-                break;
+                    console.log("\n", answer.choice, "\n");
+                    allEmployees()
+                    break;
 
                 case "View All Employees by Department":
                     console.log(answer.choice);
-                break;
+                    viewEmployeeByDepartment()
+                    break;
 
                 case "View All Employees by Role":
-                    console.log(answer.choice);
-                break;
+                    console.log("\n", answer.choice, "\n");
+                    viewEmployeeByRole();
+                    break;
+
+                case "View All employees by manager":
+                    console.log("\n", answer.choice, "\n");
+                    viewEmployeeByManager();
+                    break;
 
                 case "Add Department":
-                    console.log(answer.choice);
-                break;
+                    console.log("\n", answer.choice, "\n");
+                    addDepartment();
+                    break;
 
                 case "Add Role":
-                    console.log(answer.choice);
-                break;
+                    console.log("\n", answer.choice, "\n");
+                    addRole();
+                    break;
 
-                case "Add Employees":
-                    console.log(answer.choice);
-                break;
+                case "Add Employee":
+                    console.log("\n", answer.choice, "\n");
+                    addEmployee();
+                    break;
+
+                case "Delete Department":
+                    console.log("\n", answer.choice, "\n");
+                    deleteDepartment();
+                    break;
+
+                case "Delete Role":
+                    console.log("\n", answer.choice, "\n");
+                    deleteRole();
+                    break;
+
+                case "Delete Employee":
+                    console.log("\n", answer.choice, "\n");
+                    deleteEmployee();
+                    break;
 
                 case "Update Employee Role":
-                    console.log(answer.choice);
-                break;
+                    console.log("\n", answer.choice, "\n");
+                    updateEmployeeRole();
+                    break;
+                case "Update Employee Manager":
+                    console.log("\n", answer.choice, "\n");
+                    updateEmployeeManager();
+                    break;
+
+                case "View total budget of departments":
+                    console.log("\n", answer.choice, "\n");
+                    viewBudget();
+                    break;
 
                 case "Exit":
                     db.end();
-                break;
+                    break;
             };
         });
 };
 
 // Function view all departments
-function allDepartments(){
-    db.query("SELECT departments.id AS ID, departments.name AS Department FROM departments", 
+function allDepartments() {
+    db.query("SELECT departments.id AS ID, departments.name AS Department FROM departments",
 
-    function (err, res) {
-        if (err) throw err;
-        // Display json data in a table
-        console.table(res);
-        // Run the choices 
-        runChoices();
-      });   
+        function (err, res) {
+            if (err) throw err;
+            // Display json data in a table
+            console.table(res);
+            // Run the choices 
+            runChoices();
+        });
+};
+
+
+// Function view all roles
+function allRoles() {
+    db.query("SELECT role.id AS ID, role.title AS Title, departments.name AS Department FROM role LEFT JOIN departments on departments.id = role.department_id",
+
+        function (err, res) {
+            if (err) throw err;
+            // Display json data in a table
+            console.table(res);
+            // Run the choices 
+            runChoices();
+        });
 };

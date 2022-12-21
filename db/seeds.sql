@@ -24,11 +24,11 @@ VALUES
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES
     ("Ana", "Tara", 1, null),
-    ("Andi", "Fama", 1, 1),
-    ("Eda", "Mapa", 2, null),
-    ("Tina", "Capa", 2, 3),
-    ("Visa", "Hala", 3, null),
-    ("Genci", "Topani", 2, 5),
-    ("Mira", "Lala", 4, null),
-    ("Agimi","Mali", 4, 7),
-    ("Arti", "Noci", 2, 3);
+    ("Andi", "Fama", 2, 1),
+    ("Eda", "Mapa", 3, null),
+    ("Tina", "Capa", 4, 3),
+    ("Visa", "Hala", 5, null),
+    ("Genci", "Topani", 6, 5),
+    ("Mira", "Lala", 7, null),
+    ("Agimi","Mali", 8, 7),
+    ("Arti", "Noci", 2, 1);
