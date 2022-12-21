@@ -267,6 +267,73 @@ function addRole() {
 };
 
 
+// Function add department
+function addEmployee() {
+    inquirer.prompt([
+        {
+            name: "employeeFirstName",
+            type: "input",
+            message: "Employee first name you want to add: ",
+            validate: (input) => {
+                if (input) {
+                    return true;
+                } else {
+                    console.log(' Please enter new employee first name!');
+                    return false;
+                }
+            }
+        },
+        {
+            name: "employeeLastName",
+            type: "input",
+            message: "Employee last name you want to add: ",
+            validate: (input) => {
+                if (input) {
+                    return true;
+                } else {
+                    console.log(' Please enter new employee last name!');
+                    return false;
+                }
+            }
+        },
+        {
+            type: "list",
+            name: "choiceRole",
+            message: "Role for new employee: ",
+            choices: getRole()
+        },
+        {
+            type: "list",
+            name: "choiceManager",
+            message: "Manager for new employee: ",
+            choices: getEmployeeName()
+
+        }
+    ]).then((answer) => {
+        // Get role id and manager id
+        const roleID = getRole().indexOf(answer.choiceRole) + 1;
+        const managerID = getEmployeeName().indexOf(answer.choiceManager) + 1;
+
+        // Object with input first name, last name, role id and manager id
+        const newEmployee = {
+            first_name: answer.employeeFirstName,
+            last_name: answer.employeeLastName,
+            role_id: roleID,
+            manager_id: managerID
+        }
+
+        db.query("INSERT INTO employee SET ?", newEmployee,
+
+            function (err, res) {
+                if (err) throw err;
+                // Display employee name is added                
+                console.log('\n"', answer.employeeFirstName, ' ', answer.employeeLastName, '" is new employee added.\n');
+                // Run the choices 
+                runChoices();
+            });
+    });
+};
+
 
 // Declare an array that will contain departments
 var arrayDep = [];
@@ -281,3 +348,34 @@ function getDepartments() {
         });
     return arrayDep;
 };
+
+
+// Declare an array that will contain role
+var arrayRole = [];
+// Function return the array of role
+function getRole() {
+    db.query("SELECT * FROM role",
+        function (err, res) {
+            if (err) throw err;
+            for (let i = 0; i < res.length; i++) {
+                arrayRole.push(res[i].title);
+            }
+        });
+    return arrayRole;
+};
+
+
+// Declare an array that will contain role
+var arrayEmployeeName = [];
+// Function return the array of role
+function getEmployeeName() {
+    db.query("SELECT * FROM employee",
+        function (err, res) {
+            if (err) throw err;
+            for (let i = 0; i < res.length; i++) {
+                arrayEmployeeName.push(res[i].last_name + ' ' + res[i].first_name);
+            }
+        });
+    return arrayEmployeeName;
+};
+
