@@ -367,6 +367,38 @@ function deleteDepartment() {
 }
 
 
+// Function to delete role
+function deleteRole() {
+    inquirer.prompt([
+        {
+            name: "add",
+            type: "input",
+            message: "Delete role.(Press ENTER to continue) ", //Inquirer 8.2.4 doesn't allow a list type to be first prompt
+        },
+        {
+            type: "list",
+            name: "role",
+            message: "Choose role: ",
+            choices: getRole()
+
+        }
+    ]).then((answer) => {
+        // Get role id
+        const roleID = getRole().indexOf(answer.role) + 1;
+
+        db.query(`DELETE from role WHERE id = ${roleID}`,
+
+            function (err, res) {
+                if (err) throw err;
+                // Display role deleted                
+                console.log('\n"', answer.role, '" has been deleted', '.\n');
+                // Run the choices 
+                runChoices();
+            });
+    });
+}
+
+
 
 // Declare an array that will contain departments
 var arrayDep = [];
