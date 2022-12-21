@@ -556,6 +556,47 @@ function viewEmployeeByManager() {
 }
 
 
+// Function update employees role
+function updateEmployeeManager() {
+    inquirer.prompt([
+        {
+            name: "add",
+            type: "input",
+            message: "Add a manager for an employee.(Press ENTER to continue) ", //Inquirer 8.2.4 doesn't allow a list type to be first prompt
+        },
+        {
+            type: "list",
+            name: "employeeUpdate",
+            message: "Choose the employee you want to update: ",
+            choices: getEmployeeName()
+        },
+        {
+            type: "list",
+            name: "manager",
+            message: "Choose the manager: ",
+            choices: getEmployeeName()
+
+        }
+    ]).then((answer) => {
+        // Get employee id and manager id
+        const employeeID = getEmployeeName().indexOf(answer.employeeUpdate) + 1;
+        const managerID = getEmployeeName().indexOf(answer.manager) + 1;
+
+        db.query(`UPDATE employee SET manager_id = ${managerID} WHERE  id = ${employeeID}`,
+
+            function (err, res) {
+                if (err) throw err;
+                // Display role name is added                
+                console.log('\n"', answer.employeeUpdate, '" has "', answer.manager, '" as new manager.\n');
+                // Run the choices 
+                runChoices();
+            });
+    });
+}
+
+
+
+
 // Declare an array that will contain departments
 var arrayDep = [];
 // Function return the array of departments
