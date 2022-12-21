@@ -530,6 +530,30 @@ function viewEmployeeByDepartment() {
     });
 }
 
+// View All Employees by Manager
+function viewEmployeeByManager() {
+    inquirer.prompt([
+        {
+            name: "add",
+            type: "input",
+            message: "View employee by manager:(Press ENTER to continue) ", //Inquirer 8.2.4 doesn't allow a list type to be first prompt
+        },
+        {
+            type: "list",
+            name: "manager",
+            message: "Choose a manager: ",
+            choices: getEmployeeName()
+        }
+    ]).then((answer) => {
+        // Get employee id
+        const nameID = getEmployeeName().indexOf(answer.manager) + 1;
+
+        selectByManager(answer, nameID);
+
+        runChoices();
+
+    });
+}
 
 
 // Declare an array that will contain departments
@@ -576,3 +600,31 @@ function getEmployeeName() {
     return arrayEmployeeName;
 };
 
+// Function to select by Manager
+function selectByManager(answer, nameID) {
+
+    db.query('SELECT * FROM employee',
+        function (err, res) {
+
+            if (err) throw err;
+
+            for (let i = 0; i < res.length; i++) {
+
+                if (res.manager_id = nameID) {
+
+
+                    db.query(`SELECT employee.id AS ID, employee.first_name AS First_Name, employee.last_name AS Last_Name, role.title AS Title, role.salary AS Salary FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN departments on  role.department_id = departments.id  LEFT JOIN employee a on employee.manager_id = a.id  WHERE a.id = ${nameID} `,
+
+                        function (err, res) {
+                            if (err) throw err;
+                            // Display employee id first and last name that have selected role
+                            console.table(`\n${answer.manager}`, res);
+                            // Run the choices                        
+                        }
+                    );
+                    return;
+                }
+                return
+            }
+        });
+}
