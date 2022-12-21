@@ -335,6 +335,39 @@ function addEmployee() {
 };
 
 
+// Function to delete department
+function deleteDepartment() {
+    inquirer.prompt([
+        {
+            name: "add",
+            type: "input",
+            message: "Delete department.(Press ENTER to continue) ", //Inquirer 8.2.4 doesn't allow a list type to be first prompt
+        },
+        {
+            type: "list",
+            name: "department",
+            message: "Choose department: ",
+            choices: getDepartments()
+
+        }
+    ]).then((answer) => {
+        // Get department id
+        const departmentID = getDepartments().indexOf(answer.department) + 1;
+
+        db.query(`DELETE from departments WHERE id = ${departmentID}`,
+
+            function (err, res) {
+                if (err) throw err;
+                // Display department deleted                
+                console.log('\n"', answer.department, '" has been deleted', '.\n');
+                // Run the choices 
+                runChoices();
+            });
+    });
+}
+
+
+
 // Declare an array that will contain departments
 var arrayDep = [];
 // Function return the array of departments
