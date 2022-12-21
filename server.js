@@ -432,6 +432,43 @@ function deleteEmployee() {
 
 
 
+// Function update employees role
+function updateEmployeeRole() {
+    inquirer.prompt([
+        {
+            name: "add",
+            type: "input",
+            message: "Add a role for an employee.(Press ENTER to continue) ", //Inquirer 8.2.4 doesn't allow a list type to be first prompt
+        },
+        {
+            type: "list",
+            name: "roleUpdate",
+            message: "Role you want to update: ",
+            choices: getRole()
+        },
+        {
+            type: "list",
+            name: "employeeUpdate",
+            message: "Employee you want to update the role: ",
+            choices: getEmployeeName()
+
+        }
+    ]).then((answer) => {
+        // Get role id and manager id
+        const roleID = getRole().indexOf(answer.roleUpdate) + 1;
+        const employeeID = getEmployeeName().indexOf(answer.employeeUpdate) + 1;
+
+        db.query(`UPDATE employee SET role_id = ${roleID} WHERE  id = ${employeeID}`,
+
+            function (err, res) {
+                if (err) throw err;
+                // Display role name is added                
+                console.log('\n"', answer.employeeUpdate, '" role is update as ', answer.roleUpdate, '.\n');
+                // Run the choices 
+                runChoices();
+            });
+    });
+}
 
 
 // Declare an array that will contain departments
