@@ -556,7 +556,7 @@ function viewEmployeeByManager() {
 }
 
 
-// Function update employees role
+// Function update employees manager
 function updateEmployeeManager() {
     inquirer.prompt([
         {
@@ -595,6 +595,17 @@ function updateEmployeeManager() {
 }
 
 
+// View total budget of departments
+function viewBudget() {
+db.query(`SELECT departments.id AS ID, departments.name AS Department,CONCAT('$', FORMAT(SUM(salary),0)) AS Total_Budget FROM departments LEFT JOIN role on role.department_id = departments.id LEFT JOIN employee ON employee.role_id = role.id GROUP BY departments.id`,
+function (err, res) {
+    if (err) throw err;
+    // Display budget               
+    console.table(res)
+    // Run the choices 
+    runChoices();
+})
+}
 
 
 // Declare an array that will contain departments
